@@ -30,7 +30,7 @@ export default class ProductCard {
 
   createAddToChartListener(id){
     let plusButton = this._card.querySelector('.card__button');
-    console.log("plusButton: ", plusButton);
+    
     plusButton.addEventListener('click', (event)=>{
       let newEvent = new CustomEvent('product-add',{
         detail: id,
