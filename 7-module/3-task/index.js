@@ -10,7 +10,7 @@ export default class StepSlider {
     this.#createThumb();
     this.#createProgress();
     this.#createSteps(steps);
-    document.addEventListener('DOMContentLoaded', this.#embraceListeners.bind(this));
+    this.#embraceListeners();
   }
 
 
@@ -59,12 +59,12 @@ export default class StepSlider {
 
 
   #calculateThumbPosition(){
-    const sliderProgress = document.querySelector('.slider__progress');
-    const thumbElement = document.querySelector('.slider__thumb');
-    const slider = document.querySelector('.slider');
-    const spanContainer = document.querySelector('.slider__steps');
-    const sliderValue = document.querySelector('.slider__value');
-    let activeSpan = document.querySelector('.slider__step-active');
+    const sliderProgress = this.#slider.querySelector('.slider__progress');
+    const thumbElement = this.#slider.querySelector('.slider__thumb');
+    const slider = this.#slider;
+    const spanContainer = this.#slider.querySelector('.slider__steps');
+    const sliderValue = this.#slider.querySelector('.slider__value');
+    let activeSpan = this.#slider.querySelector('.slider__step-active');
     let sliderClientWidth = slider.clientWidth;
     let spanOffsetWidth = activeSpan.offsetWidth;
     let segmentPX = (sliderClientWidth - spanOffsetWidth * this.#steps) / this.#steps;
