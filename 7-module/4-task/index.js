@@ -55,6 +55,7 @@ export default class StepSlider {
 
   #embraceListeners(){
     this.#slider.addEventListener('pointerdown', this.#calculateThumbPosition.bind(this));
+    this.#slider.addEventListener('click', this.#thumbPositionAfterClick.bind(this));
   }
 
 
@@ -62,11 +63,12 @@ export default class StepSlider {
     event.preventDefault();
     const thumbElement = this.#slider.querySelector('.slider__thumb');
     if(event.target != thumbElement) return false;
-    thumbElement.classList.add('slider_dragging');
+    this.#slider.classList.add('slider_dragging');
 
-    const sliderProgress = this.#slider.querySelector('.slider__progress');
     const slider = this.#slider;
     let sliderCoors = slider.getBoundingClientRect();
+
+    const sliderProgress = this.#slider.querySelector('.slider__progress');
     const spanContainer = this.#slider.querySelector('.slider__steps');
     const sliderValue = this.#slider.querySelector('.slider__value');
     let sliderClientWidth = slider.clientWidth;
@@ -81,7 +83,7 @@ export default class StepSlider {
     document.addEventListener('pointermove', onMove);
 
     document.addEventListener('pointerup', (event) => {
-      thumbElement.classList.remove('slider_dragging');
+      this.#slider.classList.remove('slider_dragging');
       document.removeEventListener('pointermove', onMove);
       allSpan.forEach( (element, index, arr) => {
       let calc = Math.abs(element.offsetLeft - (event.clientX - slider.offsetLeft));
@@ -110,7 +112,6 @@ export default class StepSlider {
     }
   });
 
-
   function onMove(event){
     event.preventDefault();
     let clientX = event.clientX;
@@ -126,4 +127,48 @@ export default class StepSlider {
   }
 
  }
+
+
+  #thumbPositionAfterClick(){
+      const sliderProgress = this.#slider.querySelector('.slider__progress');
+      const thumbElement = this.#slider.querySelector('.slider__thumb');
+      const slider = this.#slider;
+      const spanContainer = this.#slider.querySelector('.slider__steps');
+      const sliderValue = this.#slider.querySelector('.slider__value');
+      let activeSpan = this.#slider.querySelector('.slider__step-active');
+      let sliderClientWidth = slider.clientWidth;
+      let spanOffsetWidth = activeSpan.offsetWidth;
+      let segmentPX = (sliderClientWidth - spanOffsetWidth * this.#steps) / this.#steps;
+      let allSpan = spanContainer.querySelectorAll('span');
+      let min = segmentPX;
+      let chosenSpan;
+      let spanId;
+
+      allSpan.forEach( (element, index, arr) => {
+      let calc = Math.abs(element.offsetLeft - (event.clientX - slider.offsetLeft));
+      if( calc < min) {
+        min = calc;
+        chosenSpan = element;
+        spanId = index;
+      }
+    });
+
+    let sliderToMove = chosenSpan.offsetLeft - thumbElement.clientWidth / 2 + 10 + spanOffsetWidth / 2;
+    let sliderToMovePrecentage = Math.round(sliderToMove / slider.offsetWidth * 100);
+    sliderProgress.style.width = sliderToMovePrecentage + '%';
+    thumbElement.style.left = sliderToMovePrecentage + '%';
+    activeSpan.classList.remove('slider__step-active');
+    chosenSpan.classList.add('slider__step-active');
+    sliderValue.textContent = spanId;
+
+    if(chosenSpan != this.#previousSlider){
+      this.#previousSlider = chosenSpan;
+      let newEvent = new CustomEvent('slider-change', {
+        detail: spanId,
+        bubbles: true,
+      });
+      this.#slider.dispatchEvent(newEvent);
+    }
+
+  }
 }
