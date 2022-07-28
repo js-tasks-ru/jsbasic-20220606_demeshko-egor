@@ -44,7 +44,7 @@ export default class Cart {
     if(productId === null) return;
     this.cartItems.find( (cartItem, index, arr) => {
       if(!cartItem) return;
-      
+
       if(cartItem.product.id === productId) {
         cartItem.count += amount;
 
@@ -92,8 +92,6 @@ export default class Cart {
   }
 
   onProductUpdate(cartItem) {
-    // реализуем в следующей задаче
-    console.log(`onProductUpdate(${cartItem})`);
     this.cartIcon.update(this);
   }
 }
