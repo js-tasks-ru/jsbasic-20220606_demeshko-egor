@@ -40,7 +40,6 @@ export default class Cart {
 
 
   updateProductCount(productId, amount) {
-    debugger;
     if(productId === null) return;
     this.cartItems.find( (cartItem, index, arr) => {
       if(!cartItem) return;

@@ -38,7 +38,6 @@ export default class Modal {
 
   setTitle(title = 'Модальное окно'){
     const modalTitle = document.querySelector('.modal__title');
-    console.log(modalTitle);
 
     if(modalTitle) {
       modalTitle.textContent = title;
